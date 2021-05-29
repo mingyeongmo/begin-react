@@ -15,13 +15,13 @@ function App() {
   });
 
   const {username, email } = inputs;
-  const onChange = e => {
+  const onChange = useCallback(e => {
     const {name, value} = e.target;
-    setInputs({
+    setInputs(inputs => ({
       ...inputs,
       [name]: value
-    });
-  };
+    }));
+  }, []);
 
   const [users, setUsers] = useState([
     {
@@ -59,7 +59,7 @@ function App() {
       email: ''
     });
     nextId.current += 1;
-  }, [users, username, email]);
+  }, [username, email]);
 
   const onRemove = useCallback(
     id => {
@@ -67,18 +67,18 @@ function App() {
     // = user.id 가 id 인 것을 제거 함
     setUsers(users.filter(user => user.id !== id));
   },
-  [users]
+  []
   );
 
   const onToggle = useCallback(
     id => {
-    setUsers(
+    setUsers(users =>
       users.map(user =>
         user.id === id ? { ...user, active: !user.active } : user
         ) 
     );
   },
-  [users]
+  []
   );
 
   const count = useMemo(() => countActiveUsers(users), [users]);
